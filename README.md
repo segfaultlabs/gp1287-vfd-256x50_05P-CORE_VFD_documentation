@@ -1,69 +1,69 @@
 # GP1287 / GP1294 / 05P-CORE  
-## 256×50 Graphic VFD Documentation & ESP32 Examples
+## 256×50 Graphic VFD Documentation and ESP32 Examples
 
 ![256x50 Graphic VFD Module](vfd.jpeg)
 
-This repository exists because **documentation for this VFD is scattered, inconsistent, and at risk of disappearing**.
+![Interface / Pinout Diagram](pinout.jpeg)
 
-The display commonly sold as **VFD256x50 GP1287** is also found labeled **05P-CORE** and under several other unrelated-looking part numbers. This repo consolidates **verified datasheets**, **pinouts**, and **working ESP32 Arduino code** so this hardware can be reused without guesswork or repeated reverse-engineering.
+This repository provides consolidated technical documentation for a 256×50 graphic vacuum fluorescent display (VFD) module commonly sold under multiple part numbers and labels, including **GP1287** and **05P-CORE**.
 
----
-
-## What this repository is
-
-- A **technical reference** for the 256×50 graphic VFD family
-- A **public archive** for the known controller datasheet
-- A place to document **real, tested ESP32 behavior**
-- A map of **all known aliases and module names**
+The purpose of this repository is to collect, preserve, and clarify information required to electrically interface and control this display, based on available datasheets and verified behavior.
 
 ---
 
-## What this repository is NOT
+## Scope and motivation
 
-- Not official vendor documentation  
-- Not a consumer tutorial  
-- Not tied to one PCB revision  
+These displays are widely available through surplus channels and online marketplaces, but are typically distributed without pinout documentation or controller references. Existing public projects demonstrate that the display is usable, but often omit low-level electrical details required for independent implementation.
 
-This is **engineering documentation**, not marketing material.
+An example of such a project is:
 
----
+- **Simple ESP8266 NTP Clock on VFD256x50 GP1287**  
+  https://www.hackster.io/mircemk/simple-esp8266-ntp-clock-on-vfd-display-vfd256x50-gp1287-e0187a
 
-## Display Overview
-
-- Display type: **Graphic Vacuum Fluorescent Display (VFD)**
-- Resolution: **256 × 50 pixels**
-- Interface: **SPI (serial)**
-- Controller family: **GP12xx**
-- Typical supply voltage: **5 V**
-- Logic level compatibility: **3.3 V (ESP32-safe)**
+That project confirms functional operation but does not publish a pinout or archive the associated datasheet. This repository focuses specifically on documenting those missing elements.
 
 ---
 
-## Known Names / Aliases
+## Repository objectives
 
-This same or near-identical display has been observed under the following names:
-
-- **VFD256x50 GP1287**
-- **GP1287 Graphic VFD**
-- **05P-CORE**
-- **GP1294AI-based VFD**
-- **INBN0BV1294UD**
-- **EPC-INBN0BV1294UD**
-- **256×50 Graphic VFD Module**
-- **256x50 SPI VFD Display**
-- Various unbranded / surplus OEM listings
-
-In practice, these modules:
-
-- Use the same SPI command structure
-- Belong to the same GP12xx controller family
-- Differ mainly in silkscreen labels and PCB layout
+- Document the **pin functions and electrical interface**
+- Archive the most complete publicly available **datasheet**
+- Provide **working ESP32 Arduino reference code**
+- Record known **part numbers and aliases** for identification
 
 ---
 
-## Datasheet (Archived)
+## Display overview
 
-This repository includes an archived copy of the most complete publicly available datasheet:
+- Display type: Graphic vacuum fluorescent display (VFD)
+- Resolution: 256 × 50 pixels
+- Interface: SPI (serial)
+- Controller family: GP12xx
+- Supply voltage: 5 V nominal
+- Logic levels: 3.3 V compatible
+
+---
+
+## Known names and identifiers
+
+This display or close variants have been observed under the following identifiers:
+
+- VFD256x50 GP1287
+- GP1287 Graphic VFD
+- 05P-CORE
+- GP1294AI-based VFD
+- INBN0BV1294UD
+- EPC-INBN0BV1294UD
+- 256×50 Graphic VFD Module
+- 256×50 SPI VFD Display
+
+Modules sold under these names share a common SPI interface and command structure, with differences primarily in PCB layout and labeling.
+
+---
+
+## Datasheet archive
+
+The repository includes the following archived datasheet:
 
 ```
 
@@ -73,95 +73,70 @@ EPC-INBN0BV1294UD_SPEC.pdf
 
 This document provides:
 
-- Pin definitions
+- Pin function definitions
 - Electrical characteristics
-- SPI timing diagrams
-- Reset and filament control requirements
+- SPI timing specifications
+- Reset and filament control behavior
 - Core command set used by GP12xx controllers
 
-Even when the module is labeled **GP1287** or **05P-CORE**, this datasheet has proven to accurately describe real hardware behavior.
+Although some modules are labeled **GP1287** or **05P-CORE**, this datasheet accurately describes the observed behavior of the hardware.
 
 ---
 
-## Pinout Summary (Typical)
+## Pin functions (from datasheet)
 
-> ⚠️ Always confirm against your specific PCB silkscreen
-
-| Signal        | Description                                  |
-|---------------|----------------------------------------------|
-| FILAMENT_EN   | Enables VFD heater (must be HIGH)            |
-| CLOCK         | SPI clock                                    |
-| DATA          | SPI data (MOSI)                              |
-| CS            | Chip select (active LOW)                     |
-| RESET         | Reset (active LOW)                           |
-| GND           | Ground                                       |
-| +5V           | Display power input                          |
-
-Failure to drive **FILAMENT_EN** HIGH will result in a blank display even if SPI communication is working.
-
----
-
-## ESP32 Support
-
-Included in this repository:
-
-- Working **Arduino ESP32 sketch**
-- Uses the **U8g2 library**
-- Software SPI for safety and compatibility
-- Explicit handling of:
-  - Filament enable
-  - Reset polarity
-  - Power sequencing
-
-This configuration has been validated on standard ESP32 dev boards.
+| Pin | Name        | I/O    | Description                                   |
+|-----|-------------|--------|-----------------------------------------------|
+| 1   | FILAMENT_EN | INPUT  | VFD filament enable, high active              |
+| 2   | CLOCK       | INPUT  | SPI clock input                               |
+| 3   | CHIPSELECT  | INPUT  | SPI chip select, low active                   |
+| 4   | DATA        | INPUT  | SPI data input, LSB first                     |
+| 5   | RESET       | INPUT  | VFD reset, low active                         |
+| 6   | GND         | —      | Ground                                        |
+| 7   | GND         | —      | Ground                                        |
+| 8   | +5V OUT     | OUTPUT | +5 V power supply output                     |
+| 9   | AINL        | OUTPUT | Audio left channel signal                    |
+| 10  | AINR        | OUTPUT | Audio right channel signal                   |
+| 11  | LII_SW      | OUTPUT | Light sensor pin, GL5506 pull-down            |
+| 12  | GND         | —      | Ground                                        |
 
 ---
 
-## Repository Structure
+## ESP32 reference implementation
+
+This repository includes a verified ESP32 Arduino example with the following characteristics:
+
+- Uses the U8g2 library
+- Software SPI for compatibility
+- Explicit handling of filament enable and reset signals
+- Operates within the electrical and timing limits specified in the datasheet
+
+---
+
+## Repository structure
 
 ```
 
 .
 ├── README.md
 ├── vfd.jpeg
+├── pinout.jpeg
 ├── EPC-INBN0BV1294UD_SPEC.pdf
 └── esp32/
 └── vfd_hello_world.ino
 
 ```
 
-- `vfd.jpeg` – Reference photo of the physical display module
-- `EPC-INBN0BV1294UD_SPEC.pdf` – Archived datasheet
-- `esp32/` – Arduino / ESP32 example code
-
----
-
-## Why this repo exists
-
-This display:
-
-- Appears frequently in surplus markets
-- Ships under multiple misleading names
-- Has no single authoritative documentation source
-- Is trivial to drive once the basics are known
-
-The goal is simple:
-
-**Make the GP1287 / 05P-CORE VFD usable without tribal knowledge.**
-
 ---
 
 ## Contributions
 
-If you have:
+Contributions are welcome, including:
 
-- A different PCB revision
-- Another datasheet or service manual
+- Additional datasheets or service documentation
 - Confirmed pinout variations
-- Logic analyzer captures or timing measurements
-- Code for other MCUs
-
-Open an issue or submit a PR.
+- Code for other microcontrollers
+- Measured timing or electrical data
 
 ---
 
