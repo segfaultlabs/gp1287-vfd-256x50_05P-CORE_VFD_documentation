@@ -18,9 +18,11 @@ These displays are widely available through surplus channels and online marketpl
 An example of such a project is:
 
 - **Simple ESP8266 NTP Clock on VFD256x50 GP1287**  
+
   https://www.hackster.io/mircemk/simple-esp8266-ntp-clock-on-vfd-display-vfd256x50-gp1287-e0187a
 
 - **Car gauges with Arduino UNO and VFD Display**
+
   https://github.com/upiir/arduino_car_vfd_gauges/tree/main  
 
 That project confirms functional operation but does not publish a pinout or archive the associated datasheet. This repository focuses specifically on documenting those missing elements.
