@@ -105,29 +105,49 @@ Although some modules are labeled **GP1287** or **05P-CORE**, this datasheet acc
 
 ---
 
-## ESP32 reference implementation
+## ESP32 reference implementations
 
-This repository includes a verified ESP32 Arduino example with the following characteristics:
+This repository includes verified ESP32 Arduino examples with the following characteristics:
 
 - Uses the U8g2 library
-- Software SPI for compatibility
+- Hardware SPI for fast performance
 - Explicit handling of filament enable and reset signals
 - Operates within the electrical and timing limits specified in the datasheet
+
+### Available Demo Programs
+
+#### 1. Simple Counter Demo (`esp32_vfd_simple_counter/`)
+Basic "Hello World" example with incrementing counter - perfect for testing your wiring and getting started.
+
+#### 2. Comprehensive Demo (`esp32_vfd_comprehensive_demo/`)
+**Full-featured demonstration** showcasing all display capabilities:
+- 7 different test modes (text, graphics, animations, patterns)
+- Brightness and contrast testing with various pixel density patterns
+- Detailed serial console output for debugging and monitoring
+- Automatic mode cycling every 8 seconds
+- Extensively documented and easy to understand
+
+**Recommended for:**
+- Learning VFD programming
+- Testing display capabilities
+- Understanding brightness characteristics
+- Use as reference code for your own projects
 
 ---
 
 ## Repository structure
 
 ```
-
 .
 ├── README.md
 ├── vfd.jpeg
 ├── pinout.jpeg
 ├── EPC-INBN0BV1294UD_SPEC.pdf
-└── esp32/
-└── vfd_hello_world.ino
-
+├── esp32_vfd_simple_counter/
+│   └── esp32_vfd_simple_counter.ino
+└── esp32_vfd_comprehensive_demo/
+    ├── esp32_vfd_comprehensive_demo.ino
+    └── README.md
 ```
 
 ---
